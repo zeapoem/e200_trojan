@@ -17,7 +17,6 @@ proc create_report { reportName command } {
     send_msg_id runtcl-5 warning "$msg"
   }
 }
-set_param xicom.use_bs_reader 1
 create_project -in_memory -part xc7z020clg484-1
 
 set_param project.singleFileAddWarning.threshold 0
@@ -179,9 +178,10 @@ read_verilog -library xil_defaultlib {
   D:/Vivado/e200/rtl/perips/sirv_uartrx.v
   D:/Vivado/e200/rtl/perips/sirv_uarttx.v
   D:/Vivado/e200/rtl/perips/sirv_wdog.v
+  D:/Vivado/e200/rtl/core/trigger_01_ifu.v
   D:/Vivado/e200/rtl/system.v
 }
-read_ip -quiet d:/Vivado/e200/e200.srcs/sources_1/ip/mmcm/mmcm.xci
+read_ip -quiet D:/Vivado/e200/e200.srcs/sources_1/ip/mmcm/mmcm.xci
 set_property used_in_implementation false [get_files -all d:/Vivado/e200/e200.srcs/sources_1/ip/mmcm/mmcm_board.xdc]
 set_property used_in_implementation false [get_files -all d:/Vivado/e200/e200.srcs/sources_1/ip/mmcm/mmcm.xdc]
 set_property used_in_implementation false [get_files -all d:/Vivado/e200/e200.srcs/sources_1/ip/mmcm/mmcm_ooc.xdc]

